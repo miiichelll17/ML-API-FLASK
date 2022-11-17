@@ -55,24 +55,54 @@ app.config['JSON_SORT_KEYS'] = False
 
 mysql = MySQL(app)
 
+
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
+        # return render_template("register.html")
+
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
         passwordstring = userDetails['password']
 
-        validateUsername = cur.execute("SELECT username FROM users WHERE username = %s", [username])
+        validateUsername = cur.execute(
+            "SELECT username FROM users WHERE username = %s", [username])
         if validateUsername > 0:
-            return jsonify({"message":"Username already exists"})
+            return jsonify({"message": "Username already exists"})
 
         # hashed_password = Bcrypt.generate_password_hash('qwerty',passwordstring)
 
-        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (username, passwordstring))
+        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)",
+                    (username, passwordstring))
         mysql.connection.commit()
         cur.close()
         return 'success'
+
+
+@app.route('/login', methods=['GET', 'POST'])_
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password'].encode('utf-8')
+        curl = mysql.connection.cursor()
+        curl.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = curl.fetchone()
+        curl.close()
+
+        if user is not None and len(user) > 0:
+            if bcrypt.hashpw(password, user['password'].encode(utf-8)) == user['password'].encode(utf-8):
+                session['name'] = user['name']
+                session['username'] = user['username']
+                return redirect(url_for('home'))
+            else:
+                flash("Gagal, username dan password tidak cocok")
+                return redirect(url_for('login'))
+        else:
+            flash("Username tidak ditemukan")
+            return redirect(url_for('login'))
+    else:
+        return render_template(url_for('login.html'))
 
 
 # @app.route("/penyakit", methods=['POST'])
@@ -109,13 +139,14 @@ def register():
 def update(id_penyakit):
     if request.method == 'PUT':
         cur = mysql.connection.cursor()
-        searchpenyakit = cur.execute("SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-        row_headers=[x[0] for x in cur.description]
+        searchpenyakit = cur.execute(
+            "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+        row_headers = [x[0] for x in cur.description]
         if (searchpenyakit > 0):
             penyakit = cur.fetchall()
-            json_data=[]
+            json_data = []
             for result in penyakit:
-                json_data.append(dict(zip(row_headers,result)))
+                json_data.append(dict(zip(row_headers, result)))
             # return jsonify(json_data)
             if (request.files['image'].filename == ''):
                 fileName = json_data[0]['image']
@@ -123,9 +154,10 @@ def update(id_penyakit):
                 img = request.files['image']
                 os.remove("./static/" + json_data[0]['image'])
                 splitfile = os.path.splitext(img.filename)
-                fileName = splitfile[0] + str(random.randint(1,1000)) + splitfile[1]
+                fileName = splitfile[0] + \
+                    str(random.randint(1, 1000)) + splitfile[1]
                 img.save("./static/" + fileName)
-            
+
             penyakitDetails = request.form
             latitude = penyakitDetails['latitude']
             longitude = penyakitDetails['longitude']
@@ -140,7 +172,8 @@ def update(id_penyakit):
             result = dictionary(p)
 
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s", (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
+            cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
+                        (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
             mysql.connection.commit()
             cur.close()
             return {
@@ -152,16 +185,17 @@ def update(id_penyakit):
         else:
             return "penyakit not found"
 
+
 @app.route('/penyakit', methods=['GET'])
 def get_penyakit():
     cur = mysql.connection.cursor()
     result = cur.execute("SELECT * FROM penyakits AS result")
-    row_headers=[x[0] for x in cur.description]
+    row_headers = [x[0] for x in cur.description]
     if result > 0:
         penyakitDetails = cur.fetchall()
-        json_data=[]
+        json_data = []
         for result in penyakitDetails:
-            json_data.append(dict(zip(row_headers,result)))
+            json_data.append(dict(zip(row_headers, result)))
         return jsonify(json_data)
         # return {
         #     "status": 200,
@@ -170,17 +204,19 @@ def get_penyakit():
         # }
     return result
 
+
 @app.route('/penyakit/<int:id_penyakit>', methods=['GET'])
 def get_penyakit_by_id(id_penyakit):
     cur = mysql.connection.cursor()
-    result = cur.execute("SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-    row_headers=[x[0] for x in cur.description]
+    result = cur.execute(
+        "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+    row_headers = [x[0] for x in cur.description]
     if result > 0:
         penyakitDetails = cur.fetchall()
-        json_data=[]
+        json_data = []
         for result in penyakitDetails:
-            json_data.append(dict(zip(row_headers,result)))
-    
+            json_data.append(dict(zip(row_headers, result)))
+
     return jsonify(json_data)
     # return {
     #         "status": 200,
@@ -188,22 +224,24 @@ def get_penyakit_by_id(id_penyakit):
     #         "data": data
     #     }
 
+
 @app.route('/penyakit/<int:id_penyakit>', methods=['DELETE'])
 def delete(id_penyakit):
     cur = mysql.connection.cursor()
-    searchpenyakit = cur.execute("SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-    row_headers=[x[0] for x in cur.description]
+    searchpenyakit = cur.execute(
+        "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+    row_headers = [x[0] for x in cur.description]
     if (searchpenyakit > 0):
         penyakit = cur.fetchall()
-        json_data=[]
+        json_data = []
         for result in penyakit:
-            json_data.append(dict(zip(row_headers,result)))
+            json_data.append(dict(zip(row_headers, result)))
     else:
         return {
             "status": 400,
             "message": "Penyakit tidak ditemukan"
         }
-    
+
     os.remove("./static/" + json_data[0]['image'])
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM penyakits WHERE id_penyakit={}".format(id_penyakit))
@@ -211,9 +249,10 @@ def delete(id_penyakit):
     cur.close()
 
     return {
-            "status": 200,
-            "message": "Penyakit dihapus",
-        }
+        "status": 200,
+        "message": "Penyakit dihapus",
+    }
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
