@@ -59,6 +59,8 @@ mysql = MySQL(app)
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
+        # return render_template("register.html")
+
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
@@ -81,26 +83,26 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])_
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        username = request.form['username']
         password = request.form['password'].encode('utf-8')
         curl = mysql.connection.cursor()
-        curl.execute("SELECT * FROM users WHERE email = %s", (email,))
+        curl.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = curl.fetchone()
         curl.close()
 
-        if user is not None and len(username) > 0:
-            if bcrypt.hashpw(password, username['password'].encode(utf-8)) == user['password'].encode(utf-8):
+        if user is not None and len(user) > 0:
+            if bcrypt.hashpw(password, user['password'].encode(utf-8)) == user['password'].encode(utf-8):
                 session['name'] = user['name']
-                session['email'] = user['email']
+                session['username'] = user['username']
                 return redirect(url_for('home'))
             else:
-                flash("Gagal, email dan password tidak cocok")
+                flash("Gagal, username dan password tidak cocok")
                 return redirect(url_for('login'))
         else:
             flash("Username tidak ditemukan")
             return redirect(url_for('login'))
     else:
-        return render_template(url_for('login'))
+        return render_template(url_for('login.html'))
 
 
 # @app.route("/penyakit", methods=['POST'])
