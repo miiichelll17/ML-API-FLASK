@@ -1,5 +1,5 @@
 from re import search
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, flash, redirect, render_template, request, jsonify, make_response, session, url_for
 from flask_mysqldb import MySQL
 import yaml
 import numpy as np
@@ -11,7 +11,7 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import random
-from flask_bcrypt import Bcrypt
+from flask_bcrypt import bcrypt
 
 app = Flask(__name__)
 
@@ -64,7 +64,8 @@ def register():
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
-        passwordstring = userDetails['password']
+        passwordstring = userDetails['password'].encode('utf-8')
+        hash_password = bcrypt.hashpw(passwordstring, bcrypt.gensalt())
 
         validateUsername = cur.execute(
             "SELECT username FROM users WHERE username = %s", [username])
@@ -74,13 +75,13 @@ def register():
         # hashed_password = Bcrypt.generate_password_hash('qwerty',passwordstring)
 
         cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)",
-                    (username, passwordstring))
+                    (username, hash_password))
         mysql.connection.commit()
         cur.close()
         return 'success'
 
 
-@app.route('/login', methods=['GET', 'POST'])_
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -91,18 +92,14 @@ def login():
         curl.close()
 
         if user is not None and len(user) > 0:
-            if bcrypt.hashpw(password, user['password'].encode(utf-8)) == user['password'].encode(utf-8):
-                session['name'] = user['name']
-                session['username'] = user['username']
-                return redirect(url_for('home'))
+            if bcrypt.hashpw(password, user[2].encode('utf-8')) == user[2].encode('utf-8'):
+                return "Success"
             else:
-                flash("Gagal, username dan password tidak cocok")
-                return redirect(url_for('login'))
+                return "Gagal, username dan password tidak cocok"
         else:
-            flash("Username tidak ditemukan")
-            return redirect(url_for('login'))
+            return "Username tidak ditemukan"
     else:
-        return render_template(url_for('login.html'))
+        return "Method undefined"
 
 
 # @app.route("/penyakit", methods=['POST'])
@@ -135,55 +132,55 @@ def login():
 #             "data": result
 #         }
 
-@app.route("/penyakit/<int:id_penyakit>", methods=['PUT'])
-def update(id_penyakit):
-    if request.method == 'PUT':
-        cur = mysql.connection.cursor()
-        searchpenyakit = cur.execute(
-            "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-        row_headers = [x[0] for x in cur.description]
-        if (searchpenyakit > 0):
-            penyakit = cur.fetchall()
-            json_data = []
-            for result in penyakit:
-                json_data.append(dict(zip(row_headers, result)))
-            # return jsonify(json_data)
-            if (request.files['image'].filename == ''):
-                fileName = json_data[0]['image']
-            else:
-                img = request.files['image']
-                os.remove("./static/" + json_data[0]['image'])
-                splitfile = os.path.splitext(img.filename)
-                fileName = splitfile[0] + \
-                    str(random.randint(1, 1000)) + splitfile[1]
-                img.save("./static/" + fileName)
+# @app.route("/penyakit/<int:id_penyakit>", methods=['PUT'])
+# def update(id_penyakit):
+#     if request.method == 'PUT':
+#         cur = mysql.connection.cursor()
+#         searchpenyakit = cur.execute(
+#             "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+#         row_headers = [x[0] for x in cur.description]
+#         if (searchpenyakit > 0):
+#             penyakit = cur.fetchall()
+#             json_data = []
+#             for result in penyakit:
+#                 json_data.append(dict(zip(row_headers, result)))
+#             # return jsonify(json_data)
+#             if (request.files['image'].filename == ''):
+#                 fileName = json_data[0]['image']
+#             else:
+#                 img = request.files['image']
+#                 os.remove("./static/" + json_data[0]['image'])
+#                 splitfile = os.path.splitext(img.filename)
+#                 fileName = splitfile[0] + \
+#                     str(random.randint(1, 1000)) + splitfile[1]
+#                 img.save("./static/" + fileName)
 
-            penyakitDetails = request.form
-            latitude = penyakitDetails['latitude']
-            longitude = penyakitDetails['longitude']
-            createdAt = json_data[0]['createdAt']
-            updatedAt = datetime.now()
+#             penyakitDetails = request.form
+#             latitude = penyakitDetails['latitude']
+#             longitude = penyakitDetails['longitude']
+#             createdAt = json_data[0]['createdAt']
+#             updatedAt = datetime.now()
 
-            url = os.path.join('static/', fileName)
-            img_path = url
+#             url = os.path.join('static/', fileName)
+#             img_path = url
 
-            p = predict_image(img_path)
-            print(p)
-            result = dictionary(p)
+#             p = predict_image(img_path)
+#             print(p)
+#             result = dictionary(p)
 
-            cur = mysql.connection.cursor()
-            cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
-                        (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
-            mysql.connection.commit()
-            cur.close()
-            return {
-                "status": 204,
-                "message": "Penyakit berhasil perbarui",
-                "data": result
-            }
+#             cur = mysql.connection.cursor()
+#             cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
+#                         (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
+#             mysql.connection.commit()
+#             cur.close()
+#             return {
+#                 "status": 204,
+#                 "message": "Penyakit berhasil perbarui",
+#                 "data": result
+#             }
 
-        else:
-            return "penyakit not found"
+#         else:
+#             return "penyakit not found"
 
 
 @app.route('/penyakit', methods=['GET'])
