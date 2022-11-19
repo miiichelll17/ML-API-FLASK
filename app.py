@@ -121,9 +121,7 @@ def insert():
             else:
 
                if request.method == 'POST':
-                    mydb = pymysql.connect(
-                       user='root', password='root', host='localhost', database="deteksi_kopi")
-                    mycursor = mydb.cursor()
+                    mycursor = mysql.connection.cursor()
                     if request.method == 'POST':
                         mycursor.execute(
                             "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
@@ -133,9 +131,9 @@ def insert():
                         else:
                             mycursor.execute(
                                 "INSERT INTO hasil_panen(product_name, price ,quantity) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
-                            mydb.commit()
+                            mycursor.commit()
                             mycursor.close()
-                            mydb.close()
+                            mycursor.close()
                             flash(jeniskopi + ', ' + harga + ', ' +
                                   jumlah + ', Successfully saved!')
                             return render_template('index.html')
@@ -157,9 +155,7 @@ def search():
             return render_template('index.html')
         else:
             if request.method == 'POST':
-                mydb = pymysql.connect(
-                    user='root', password='root', host='localhost', database='deteksi_kopi')
-                mycursor = mydb.cursor()
+                mycursor = mysql.connection.cursor()
                 if request.method == 'POST':
                     mycursor.execute(
                         "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
@@ -191,18 +187,16 @@ def delete():
             return render_template('index.html')
         else:
             if request.method == 'POST':
-                mydb = pymysql.connect(
-                    user='root', password='root', host='localhost', database='deteksi_kopi')
-                mycursor = mydb.cursor()
+                mycursor = mysql.connection.cursor()
                 if request.method == 'POST':
                     mycursor.execute(
                         "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [namee])
                     if mycursor.fetchone()[0]:
                         mycursor.execute(
                             "DELETE FROM hasil_panen WHERE product_name = %s;", [namee])
-                        mydb.commit()
+                        mycursor.commit()
                         mycursor.close()
-                        mydb.close()
+                        mycursor.close()
                         flash('Berhasil Menghapus!')
                         return render_template('index.html')
                     else:
@@ -228,9 +222,7 @@ def update():
            return render_template('index.html')
        else:
            if request.method == 'POST':
-               mydb = pymysql.connect(
-                   user='root', password='root', host='localhost', database='deteksi_kopi')
-               mycursor = mydb.cursor()
+               mycursor = mysql.connection.cursor()
                if request.method == 'POST':
                    mycursor.execute(
                        "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [name_prod])
@@ -248,9 +240,9 @@ def update():
                                sum = int(b) + int(quantt)
                                mycursor.execute("UPDATE hasil_panen SET price='" + price + "' , quantity='" + str(
                                    sum) + "' WHERE product_name='" + name_prod + "'")
-                               mydb.commit()
+                               mycursor.commit()
                                mycursor.close()
-                               mydb.close()
+                               mycursor.close()
                                flash('Berhasil Diupdate')
                                return render_template('index.html')
                    else:
