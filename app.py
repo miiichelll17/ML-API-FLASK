@@ -104,155 +104,6 @@ def login():
         return "Method undefined"
 
 
-# @app.route("/penyakit", methods=['POST'])
-# def predict():
-#     if request.method == 'POST':
-#         penyakitDetails = request.form
-#         latitude = penyakitDetails['latitude']
-#         longitude = penyakitDetails['longitude']
-#         img = request.files['image']
-#         createdAt = datetime.now()
-#         updatedAt = datetime.now()
-
-#         splitfile = os.path.splitext(img.filename)
-#         fileName = splitfile[0] + str(random.randint(1,1000)) + splitfile[1]
-#         img.save("./static/" + fileName)
-#         url = os.path.join('static/', fileName)
-#         img_path = url
-
-#         p = predict_image(img_path)
-#         print(p)
-#         result = dictionary(p)
-
-#         cur = mysql.connection.cursor()
-#         cur.execute("INSERT INTO penyakits(indikasi, latitude, longitude, createdAt, updatedAt, image, url) VALUES (%s, %s, %s, %s, %s, %s, %s)", (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url))
-#         mysql.connection.commit()
-#         cur.close()
-#         return {
-#             "status": 200,
-#             "message": "Penyakit berhasil diprediksi",
-#             "data": result
-#         }
-
-# @app.route("/penyakit/<int:id_penyakit>", methods=['PUT'])
-# def update(id_penyakit):
-#     if request.method == 'PUT':
-#         cur = mysql.connection.cursor()
-#         searchpenyakit = cur.execute(
-#             "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-#         row_headers = [x[0] for x in cur.description]
-#         if (searchpenyakit > 0):
-#             penyakit = cur.fetchall()
-#             json_data = []
-#             for result in penyakit:
-#                 json_data.append(dict(zip(row_headers, result)))
-#             # return jsonify(json_data)
-#             if (request.files['image'].filename == ''):
-#                 fileName = json_data[0]['image']
-#             else:
-#                 img = request.files['image']
-#                 os.remove("./static/" + json_data[0]['image'])
-#                 splitfile = os.path.splitext(img.filename)
-#                 fileName = splitfile[0] + \
-#                     str(random.randint(1, 1000)) + splitfile[1]
-#                 img.save("./static/" + fileName)
-
-#             penyakitDetails = request.form
-#             latitude = penyakitDetails['latitude']
-#             longitude = penyakitDetails['longitude']
-#             createdAt = json_data[0]['createdAt']
-#             updatedAt = datetime.now()
-
-#             url = os.path.join('static/', fileName)
-#             img_path = url
-
-#             p = predict_image(img_path)
-#             print(p)
-#             result = dictionary(p)
-
-#             cur = mysql.connection.cursor()
-#             cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
-#                         (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
-#             mysql.connection.commit()
-#             cur.close()
-#             return {
-#                 "status": 204,
-#                 "message": "Penyakit berhasil perbarui",
-#                 "data": result
-#             }
-
-#         else:
-#             return "penyakit not found"
-
-
-# @app.route('/penyakit', methods=['GET'])
-# def get_penyakit():
-#     cur = mysql.connection.cursor()
-#     result = cur.execute("SELECT * FROM penyakits AS result")
-#     row_headers = [x[0] for x in cur.description]
-#     if result > 0:
-#         penyakitDetails = cur.fetchall()
-#         json_data = []
-#         for result in penyakitDetails:
-#             json_data.append(dict(zip(row_headers, result)))
-#         return jsonify(json_data)
-#         # return {
-#         #     "status": 200,
-#         #     "message": "Penyakit ditemukan",
-#         #     "data": penyakitDetails
-#         # }
-#     return result
-
-
-# @app.route('/penyakit/<int:id_penyakit>', methods=['GET'])
-# def get_penyakit_by_id(id_penyakit):
-#     cur = mysql.connection.cursor()
-#     result = cur.execute(
-#         "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-#     row_headers = [x[0] for x in cur.description]
-#     if result > 0:
-#         penyakitDetails = cur.fetchall()
-#         json_data = []
-#         for result in penyakitDetails:
-#             json_data.append(dict(zip(row_headers, result)))
-
-#     return jsonify(json_data)
-#     # return {
-#     #         "status": 200,
-#     #         "message": "Penyakit ditemukan",
-#     #         "data": data
-#     #     }
-
-
-# @app.route('/penyakit/<int:id_penyakit>', methods=['DELETE'])
-# def delete(id_penyakit):
-#     cur = mysql.connection.cursor()
-#     searchpenyakit = cur.execute(
-#         "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
-#     row_headers = [x[0] for x in cur.description]
-#     if (searchpenyakit > 0):
-#         penyakit = cur.fetchall()
-#         json_data = []
-#         for result in penyakit:
-#             json_data.append(dict(zip(row_headers, result)))
-#     else:
-#         return {
-#             "status": 400,
-#             "message": "Penyakit tidak ditemukan"
-#         }
-
-#     os.remove("./static/" + json_data[0]['image'])
-#     cur = mysql.connection.cursor()
-#     cur.execute("DELETE FROM penyakits WHERE id_penyakit={}".format(id_penyakit))
-#     mysql.connection.commit()
-#     cur.close()
-
-#     return {
-#         "status": 200,
-#         "message": "Penyakit dihapus",
-#     }
-
-
 @app.route('/pencatatan/insert', methods=['POST'])
 def insert():
 
@@ -408,6 +259,155 @@ def update():
     except Exception as e:
         flash(e)
         return render_template('index.html')
+
+        
+# @app.route("/penyakit", methods=['POST'])
+# def predict():
+#     if request.method == 'POST':
+#         penyakitDetails = request.form
+#         latitude = penyakitDetails['latitude']
+#         longitude = penyakitDetails['longitude']
+#         img = request.files['image']
+#         createdAt = datetime.now()
+#         updatedAt = datetime.now()
+
+#         splitfile = os.path.splitext(img.filename)
+#         fileName = splitfile[0] + str(random.randint(1,1000)) + splitfile[1]
+#         img.save("./static/" + fileName)
+#         url = os.path.join('static/', fileName)
+#         img_path = url
+
+#         p = predict_image(img_path)
+#         print(p)
+#         result = dictionary(p)
+
+#         cur = mysql.connection.cursor()
+#         cur.execute("INSERT INTO penyakits(indikasi, latitude, longitude, createdAt, updatedAt, image, url) VALUES (%s, %s, %s, %s, %s, %s, %s)", (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url))
+#         mysql.connection.commit()
+#         cur.close()
+#         return {
+#             "status": 200,
+#             "message": "Penyakit berhasil diprediksi",
+#             "data": result
+#         }
+
+# @app.route("/penyakit/<int:id_penyakit>", methods=['PUT'])
+# def update(id_penyakit):
+#     if request.method == 'PUT':
+#         cur = mysql.connection.cursor()
+#         searchpenyakit = cur.execute(
+#             "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+#         row_headers = [x[0] for x in cur.description]
+#         if (searchpenyakit > 0):
+#             penyakit = cur.fetchall()
+#             json_data = []
+#             for result in penyakit:
+#                 json_data.append(dict(zip(row_headers, result)))
+#             # return jsonify(json_data)
+#             if (request.files['image'].filename == ''):
+#                 fileName = json_data[0]['image']
+#             else:
+#                 img = request.files['image']
+#                 os.remove("./static/" + json_data[0]['image'])
+#                 splitfile = os.path.splitext(img.filename)
+#                 fileName = splitfile[0] + \
+#                     str(random.randint(1, 1000)) + splitfile[1]
+#                 img.save("./static/" + fileName)
+
+#             penyakitDetails = request.form
+#             latitude = penyakitDetails['latitude']
+#             longitude = penyakitDetails['longitude']
+#             createdAt = json_data[0]['createdAt']
+#             updatedAt = datetime.now()
+
+#             url = os.path.join('static/', fileName)
+#             img_path = url
+
+#             p = predict_image(img_path)
+#             print(p)
+#             result = dictionary(p)
+
+#             cur = mysql.connection.cursor()
+#             cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
+#                         (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
+#             mysql.connection.commit()
+#             cur.close()
+#             return {
+#                 "status": 204,
+#                 "message": "Penyakit berhasil perbarui",
+#                 "data": result
+#             }
+
+#         else:
+#             return "penyakit not found"
+
+
+# @app.route('/penyakit', methods=['GET'])
+# def get_penyakit():
+#     cur = mysql.connection.cursor()
+#     result = cur.execute("SELECT * FROM penyakits AS result")
+#     row_headers = [x[0] for x in cur.description]
+#     if result > 0:
+#         penyakitDetails = cur.fetchall()
+#         json_data = []
+#         for result in penyakitDetails:
+#             json_data.append(dict(zip(row_headers, result)))
+#         return jsonify(json_data)
+#         # return {
+#         #     "status": 200,
+#         #     "message": "Penyakit ditemukan",
+#         #     "data": penyakitDetails
+#         # }
+#     return result
+
+
+# @app.route('/penyakit/<int:id_penyakit>', methods=['GET'])
+# def get_penyakit_by_id(id_penyakit):
+#     cur = mysql.connection.cursor()
+#     result = cur.execute(
+#         "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+#     row_headers = [x[0] for x in cur.description]
+#     if result > 0:
+#         penyakitDetails = cur.fetchall()
+#         json_data = []
+#         for result in penyakitDetails:
+#             json_data.append(dict(zip(row_headers, result)))
+
+#     return jsonify(json_data)
+#     # return {
+#     #         "status": 200,
+#     #         "message": "Penyakit ditemukan",
+#     #         "data": data
+#     #     }
+
+
+# @app.route('/penyakit/<int:id_penyakit>', methods=['DELETE'])
+# def delete(id_penyakit):
+#     cur = mysql.connection.cursor()
+#     searchpenyakit = cur.execute(
+#         "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+#     row_headers = [x[0] for x in cur.description]
+#     if (searchpenyakit > 0):
+#         penyakit = cur.fetchall()
+#         json_data = []
+#         for result in penyakit:
+#             json_data.append(dict(zip(row_headers, result)))
+#     else:
+#         return {
+#             "status": 400,
+#             "message": "Penyakit tidak ditemukan"
+#         }
+
+#     os.remove("./static/" + json_data[0]['image'])
+#     cur = mysql.connection.cursor()
+#     cur.execute("DELETE FROM penyakits WHERE id_penyakit={}".format(id_penyakit))
+#     mysql.connection.commit()
+#     cur.close()
+
+#     return {
+#         "status": 200,
+#         "message": "Penyakit dihapus",
+#     }
 
 
 if __name__ == '__main__':
