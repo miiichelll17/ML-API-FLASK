@@ -80,7 +80,7 @@ def insert():
     jeniskopi = request.form['addname']
     harga = request.form['addprice']
     jumlah = request.form['addquantity']
-    # waktu = request.form['addtime']
+    waktu = request.form['addtime']
 
     if jeniskopi == "":
         return "Jenis Kopi tidak boleh kosong"
@@ -88,8 +88,8 @@ def insert():
         return "Harga tidak boleh kosong"
     elif jumlah == "":
         return "Jumlah tidak boleh kosong"
-    # elif waktu == "":
-    #     return "Waktu tidak boleh kosong"
+    elif waktu == "":
+        return "Waktu tidak boleh kosong"
 
     if request.method == 'POST':
         mycursor = mysql.connection.cursor()
@@ -99,11 +99,11 @@ def insert():
             return "Jenis Kopi sudah ada"
         else:
             mycursor.execute(
-                "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
+                "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah, waktu))
             mysql.connection.commit()
             mycursor.close()
             flash(jeniskopi + ', ' + harga + ', ' +
-                jumlah + ', Successfully saved!')
+                  jumlah + ',' + waktu, 'Successfully saved!')
             return "Success add data"
     else:
         return "Method undefined"
@@ -119,7 +119,7 @@ def insert():
 @app.route('/pencatatan/search', methods=['POST'])
 def search():
 
-    try:
+    #try:
         jeniskopi = request.form['carikopi']
         if jeniskopi == "":
             # flash('Harap isi kolom pencarian ')
@@ -129,25 +129,25 @@ def search():
                 mycursor = mysql.connection.cursor()
                 if request.method == 'POST':
                     mycursor.execute(
-                        "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
+                        "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
                     if mycursor.fetchone()[0]:
                         mycursor.execute(
-                            "SELECT * FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
+                            "SELECT * FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
                         prod = mycursor.fetchall()
                         flash(jeniskopi + ' Ditemukan!')
-                        return render_template('index.html', jeniskopis=prod)
+                        return "Ditemukan"
                     else:
                         flash('Tidak ada jenis kopi tersebut ' + jeniskopi)
-                    return render_template('index.html')
+                    return "Tidak ada jenis kopi tersebut"
                 else:
                     flash('Tidak ada jenis kopi tersebut ' + jeniskopi)
-                    return render_template('index.html')
+                    return 'tidak ada jenis kopi tersebut'
             else:
-                return render_template('index.html')
+                return 'Method undefined'
 
-    except Exception as e:
-        flash(e)
-        return render_template('index.html')
+    # except Exception as e:
+    #     flash(e)
+    #     return render_template('index.html')
 
 
 @app.route('/pencatatan/delete', methods=['POST'])
@@ -161,10 +161,10 @@ def delete():
                 mycursor = mysql.connection.cursor()
                 if request.method == 'POST':
                     mycursor.execute(
-                        "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [namee])
+                        "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [namee])
                     if mycursor.fetchone()[0]:
                         mycursor.execute(
-                            "DELETE FROM hasil_panen WHERE product_name = %s;", [namee])
+                            "DELETE FROM hasil_panen WHERE jenis_kopi = %s;", [namee])
                         mysql.connection.commit()
                         mycursor.close()
                         flash('Berhasil Menghapus!')
@@ -198,10 +198,10 @@ def update():
                 mycursor = mysql.connection.cursor()
                 if request.method == 'POST':
                     mycursor.execute(
-                        "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [name_prod])
+                        "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [name_prod])
                     if mycursor.fetchone()[0]:
                         mycursor.execute(
-                            "SELECT * FROM hasil_panen WHERE product_name = %s;", [name_prod])
+                            "SELECT * FROM hasil_panen WHERE jenis_kopi = %s;", [name_prod])
                         produ = mycursor.fetchall()
                         flash(name_prod + ' Ditemukan!')
                         for row in produ:
@@ -212,7 +212,7 @@ def update():
                             else:
                                 sum = int(b) + int(quantt)
                                 mycursor.execute("UPDATE hasil_panen SET price='" + price + "' , quantity='" + str(
-                                    sum) + "' WHERE product_name='" + name_prod + "'")
+                                    sum) + "' WHERE jenis_kopi='" + name_prod + "'")
                                 mysql.connection.commit()
                                 mycursor.close()
                                 mycursor.close()
@@ -254,7 +254,6 @@ def update():
 #         return {"result": "Phoma"}
 #     if result == 3:
 #         return {"result": "Rust"}
-
 
 
 # @app.route("/penyakit", methods=['POST'])
@@ -406,7 +405,6 @@ def update():
 #         "status": 200,
 #         "message": "Penyakit dihapus",
 #     }
-
 
 if __name__ == '__main__':
     app.secret_key = 'qwerty'
