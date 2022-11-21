@@ -106,42 +106,41 @@ def login():
 
 @app.route('/pencatatan/insert', methods=['POST'])
 def insert():
-
         try:
             jeniskopi = request.form['addname']
             harga = request.form['addprice']
             jumlah = request.form['addquantity']
 
             if jeniskopi == "":
-                return render_template('index.html')
+                return "Jenis Kopi tidak boleh kosong"
             elif harga == "":
-                return render_template('index.html')
+                return "Harga tidak boleh kosong"
             elif jumlah == "":
-                return render_template('index.html')
-            else:
+                return "Jumlah tidak boleh kosong"
 
-               if request.method == 'POST':
-                    mycursor = mysql.connection.cursor()
-                    if request.method == 'POST':
-                        mycursor.execute(
-                            "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
-                        if mycursor.fetchone()[0]:
-                            flash(jeniskopi + ' is already on the list')
-                            return render_template('index.html')
-                        else:
-                            mycursor.execute(
-                                "INSERT INTO hasil_panen(product_name, price ,quantity) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
-                            mycursor.commit()
-                            mycursor.close()
-                            mycursor.close()
-                            flash(jeniskopi + ', ' + harga + ', ' +
-                                  jumlah + ', Successfully saved!')
-                            return render_template('index.html')
-                    else:
-                        return render_template('index.html')
+            
+            if request.method == 'POST':
+                mycursor = mysql.connection.cursor()
+                # mycursor.execute(
+                #     "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
+                # if mycursor.fetchone()[0]:
+                #     return "Jenis Kopi sudah ada"
+                # else:
+                mycursor.execute(
+                    "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
+                mysql.connection.commit()
+                mycursor.close()
+                flash(jeniskopi + ', ' + harga + ', ' +
+                      jumlah + ', Successfully saved!')
+                return "Success add data"
+            else:
+                return "Method undefined"
         except Exception as e:
             flash(e)
-            return render_template('index.html')
+            return JSONEncoder(
+                            data={
+                                "message": "Failed to add data",
+                                "error": e    })
 
 
 
@@ -403,4 +402,5 @@ def update():
 
 
 if __name__ == '__main__':
+    app.secret_key = 'qwerty'
     app.run(host='0.0.0.0', port=5000)
