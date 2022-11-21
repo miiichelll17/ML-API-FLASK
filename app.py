@@ -121,18 +121,18 @@ def insert():
             
             if request.method == 'POST':
                 mycursor = mysql.connection.cursor()
-                # mycursor.execute(
-                #     "SELECT COUNT(1) FROM hasil_panen WHERE product_name = %s;", [jeniskopi])
-                # if mycursor.fetchone()[0]:
-                #     return "Jenis Kopi sudah ada"
-                # else:
                 mycursor.execute(
-                    "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
-                mysql.connection.commit()
-                mycursor.close()
-                flash(jeniskopi + ', ' + harga + ', ' +
-                      jumlah + ', Successfully saved!')
-                return "Success add data"
+                    "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
+                if mycursor.fetchone()[0]:
+                    return "Jenis Kopi sudah ada"
+                else:
+                    mycursor.execute(
+                        "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
+                    mysql.connection.commit()
+                    mycursor.close()
+                    flash(jeniskopi + ', ' + harga + ', ' +
+                        jumlah + ', Successfully saved!')
+                    return "Success add data"
             else:
                 return "Method undefined"
         except Exception as e:
@@ -193,8 +193,7 @@ def delete():
                     if mycursor.fetchone()[0]:
                         mycursor.execute(
                             "DELETE FROM hasil_panen WHERE product_name = %s;", [namee])
-                        mycursor.commit()
-                        mycursor.close()
+                        mysql.connection.commit()
                         mycursor.close()
                         flash('Berhasil Menghapus!')
                         return render_template('index.html')
@@ -239,7 +238,7 @@ def update():
                                sum = int(b) + int(quantt)
                                mycursor.execute("UPDATE hasil_panen SET price='" + price + "' , quantity='" + str(
                                    sum) + "' WHERE product_name='" + name_prod + "'")
-                               mycursor.commit()
+                               mysql.connection.commit()
                                mycursor.close()
                                mycursor.close()
                                flash('Berhasil Diupdate')
