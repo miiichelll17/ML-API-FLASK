@@ -80,7 +80,7 @@ def insert():
     jeniskopi = request.form['addname']
     harga = request.form['addprice']
     jumlah = request.form['addquantity']
-    ##waktu = request.form['addtime']
+    waktu = datetime.now()
 
     if jeniskopi == "":
         return "Jenis Kopi tidak boleh kosong"
@@ -88,8 +88,8 @@ def insert():
         return "Harga tidak boleh kosong"
     elif jumlah == "":
         return "Jumlah tidak boleh kosong"
-    # elif waktu == "":
-    #     return "Waktu tidak boleh kosong"
+    elif waktu == "":
+        return "Waktu tidak boleh kosong"
 
     if request.method == 'POST':
         mycursor = mysql.connection.cursor()
@@ -99,11 +99,11 @@ def insert():
             return "Jenis Kopi sudah ada"
         else:
             mycursor.execute(
-                "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas) Values(%s,%s,%s)", (jeniskopi, harga, jumlah))
+                "INSERT INTO hasil_panen(jenis_kopi, harga, kuantitas, waktu) Values(%s,%s,%s,%s)", (jeniskopi, harga, jumlah, waktu))
             mysql.connection.commit()
             mycursor.close()
             flash(jeniskopi + ', ' + harga + ', ' +
-                  jumlah + 'Successfully saved!')
+                  jumlah + ',' + str(waktu) + ' Successfully saved!')
             return "Success add data"
     else:
         return "Method undefined"
@@ -184,7 +184,7 @@ def update():
     jeniskopi = request.form['addname']
     harga = request.form['addprice']
     jumlah = request.form['addquantity']
-    #timee = request.form ['timee']
+    timee = datetime.now()
 
     if jeniskopi == "":
         return 'Jenis kopi tidak boleh kosong'
@@ -192,8 +192,8 @@ def update():
         return "Harga tidak boleh kosong"
     elif jumlah == "":
         return "Jumlah tidak boleh kosong"
-    # elif timee == "":
-    #     return render_template('index.html')
+    elif timee == "":
+        return "Waktu tidak boleh kosong"
     else:
         if request.method == 'POST':
             mycursor = mysql.connection.cursor()
@@ -204,16 +204,17 @@ def update():
                     mycursor.execute(
                         "SELECT * FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
                     produ = mycursor.fetchall()
+                    print(produ)
                     flash(jeniskopi + ' Ditemukan!')
                     for row in produ:
-                        b = row[3]
+                        b = row[0]
                         if int(b)+int(jumlah) < 0:
                             flash('Tidak cukup')
                             return 'Tidak cukup'
                         else:
                             sum = int(b) + int(jumlah)
-                            mycursor.execute("UPDATE hasil_panen SET harga='" + harga + "' , jumlah='" + str(
-                                sum) + "' WHERE jenis_kopi='" + jeniskopi + "'")
+                            mycursor.execute("UPDATE hasil_panen SET harga='" + harga + "' , kuantitas ='" +
+                                             jumlah + "' , waktu ='" + str(timee) + "' WHERE jenis_kopi='" + jeniskopi + "'")
                             mysql.connection.commit()
                             mycursor.close()
                             mycursor.close()
@@ -242,19 +243,19 @@ def update():
 #     x = image.img_to_array(img)
 #     x = np.expand_dims(x, axis=0)
 #     images = np.vstack([x])
-#     classes = model.predict(images, batch_size=32)
+#     classes = np.argmax(model_vgg.predict(images)[0])
 #     return classes
 
 
 # def dictionary(result):
-#     if result == 0:
-#         return {"result": "Healthy}
-#     if result == 1:
-#         return {"result": "Miner"}
-#     if result == 2:
-#         return {"result": "Phoma"}
-#     if result == 3:
-#         return {"result": "Rust"}
+#   if prediction == 0:
+#       return("Healthy")
+#   elif prediction == 1:
+#       return("Miner")
+#   elif prediction == 2:
+#       return("Phoma")
+#   else:
+#       return("Rust")
 
 
 # @app.route("/penyakit", methods=['POST'])
@@ -264,8 +265,7 @@ def update():
 #         latitude = penyakitDetails['latitude']
 #         longitude = penyakitDetails['longitude']
 #         img = request.files['image']
-#         createdAt = datetime.now()
-#         updatedAt = datetime.now()
+
 
 #         splitfile = os.path.splitext(img.filename)
 #         fileName = splitfile[0] + str(random.randint(1, 1000)) + splitfile[1]
@@ -278,8 +278,8 @@ def update():
 #         result = dictionary(p)
 
 #         cur = mysql.connection.cursor()
-#         cur.execute("INSERT INTO penyakits(indikasi, latitude, longitude, createdAt, updatedAt, image, url) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-#                     (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url))
+#         cur.execute("INSERT INTO penyakits(ciri, latitude, longitude,  image, url) VALUES (%s, %s, %s, %s, %s, %s)",
+#                     (result['result'], latitude, longitude, fileName, url))
 #         mysql.connection.commit()
 #         cur.close()
 #         return {
@@ -315,8 +315,7 @@ def update():
 #             penyakitDetails = request.form
 #             latitude = penyakitDetails['latitude']
 #             longitude = penyakitDetails['longitude']
-#             createdAt = json_data[0]['createdAt']
-#             updatedAt = datetime.now()
+
 
 #             url = os.path.join('static/', fileName)
 #             img_path = url
@@ -326,8 +325,8 @@ def update():
 #             result = dictionary(p)
 
 #             cur = mysql.connection.cursor()
-#             cur.execute("UPDATE penyakits SET indikasi=%s, latitude=%s, longitude=%s, createdAt=%s, updatedAt=%s, image=%s, url=%s WHERE id_penyakit=%s",
-#                         (result['result'], latitude, longitude, createdAt, updatedAt, fileName, url, id_penyakit))
+#             cur.execute("UPDATE penyakits SET ciri=%s, latitude=%s, longitude=%s, image=%s, url=%s WHERE id_penyakit=%s",
+#                         (result['result'], latitude, longitude, fileName, url, id_penyakit))
 #             mysql.connection.commit()
 #             cur.close()
 #             return {
