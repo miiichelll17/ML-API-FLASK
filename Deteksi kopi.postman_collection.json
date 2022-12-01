@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "3fb7c420-4b66-422f-aac0-9e12120d82bd",
+		"name": "Deteksi kopi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24506465"
+	},
+	"item": [
+		{
+			"name": "pencatatan",
+			"item": [
+				{
+					"name": "insert",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "addname",
+									"value": "kapal api",
+									"type": "text"
+								},
+								{
+									"key": "addprice",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "addquantity",
+									"value": "200",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/pencatatan/insert",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"pencatatan",
+								"insert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SEARCH",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "carikopi",
+									"value": "torabika",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/pencatatan/search",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"pencatatan",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "prodsname",
+									"value": "abc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/pencatatan/delete",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"pencatatan",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "addname",
+									"value": "lampung",
+									"type": "text"
+								},
+								{
+									"key": "addprice",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "addquantity",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/pencatatan/update",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"pencatatan",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deteksi",
+			"item": [
+				{
+					"name": "tambah",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Dennis/Downloads/Logo_UnivLampung.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/penyakit",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"penyakit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "latitude",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/penyakit/<int:id_penyakit>",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"penyakit",
+								"<int:id_penyakit>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "liat semua",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "cari berdasarkan id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/penyakit",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"penyakit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hapus",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/penyakit/4",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"penyakit",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "aaaaa",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "aaaaa",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
