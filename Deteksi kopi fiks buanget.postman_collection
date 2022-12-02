@@ -161,7 +161,17 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/C:/Users/Dennis/Downloads/Logo_UnivLampung.png"
+									"src": "/C:/Users/Dennis/Downloads/miner_58.jpg"
+								},
+								{
+									"key": "latitude",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "longitude",
+									"value": "1",
+									"type": "text"
 								}
 							]
 						},
@@ -189,7 +199,7 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Dennis/Downloads/phoma_85.jpg"
 								},
 								{
 									"key": "latitude",
@@ -204,14 +214,14 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:5000/penyakit/<int:id_penyakit>",
+							"raw": "localhost:5000/penyakit/6",
 							"host": [
 								"localhost"
 							],
 							"port": "5000",
 							"path": [
 								"penyakit",
-								"<int:id_penyakit>"
+								"6"
 							]
 						}
 					},
@@ -219,14 +229,6 @@
 				},
 				{
 					"name": "liat semua",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "cari berdasarkan id",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -244,19 +246,38 @@
 					"response": []
 				},
 				{
-					"name": "hapus",
+					"name": "cari berdasarkan id",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:5000/penyakit/4",
+							"raw": "localhost:5000/penyakit/7",
 							"host": [
 								"localhost"
 							],
 							"port": "5000",
 							"path": [
 								"penyakit",
-								"4"
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hapus",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/penyakit/7",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"penyakit",
+								"7"
 							]
 						}
 					},

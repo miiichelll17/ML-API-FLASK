@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2022 at 07:21 PM
+-- Generation Time: Dec 02, 2022 at 04:24 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -68,8 +68,22 @@ CREATE TABLE `penyakit` (
 --
 
 INSERT INTO `penyakit` (`nama_penyakit`, `ciri`, `url`, `deskripsi`, `penanganan`, `latitude`, `longitude`, `id_penyakit`, `image`) VALUES
-('', 'Rust', 'static/miner_7328.jpg', 'blablablalblab', 'nananana', 111, 222, 6, 'miner_7328.jpg'),
-('', 'Rust', 'static/miner_73236.jpg', 'blablablalblab', 'nananana', 111, 3333, 7, 'miner_73236.jpg');
+('', 'Phoma', 'static/phoma_85217.jpg', 'blablablalblab', 'nananana', 0, 0, 6, 'phoma_85217.jpg'),
+('', 'Rust', 'static/healthy_76491.jpg', 'blablablalblab', 'nananana', 1, 1, 8, 'healthy_76491.jpg'),
+('Phoma', 'Phoma', 'static/phoma_61336.jpg', 'blablablalblab', 'nananana', 1, 1, 9, 'phoma_61336.jpg'),
+('Rust', 'Rust', 'static/rust_62305.jpg', 'blablablalblab', 'nananana', 1, 1, 10, 'rust_62305.jpg'),
+('Rust', 'Rust', 'static/miner_58746.jpg', 'blablablalblab', 'nananana', 1, 1, 11, 'miner_58746.jpg'),
+('Rust', 'Rust', 'static/healthy_5611.jpg', 'blablablalblab', 'nananana', 1, 1, 12, 'healthy_5611.jpg'),
+('Phoma', 'Phoma', 'static/phoma_63639.jpg', 'blablablalblab', 'nananana', 1, 1, 13, 'phoma_63639.jpg'),
+('Phoma', 'Phoma', 'static/miner_55917.jpg', 'blablablalblab', 'nananana', 1, 1, 14, 'miner_55917.jpg'),
+('Rust', 'Rust', 'static/rust_62337.jpg', 'blablablalblab', 'nananana', 1, 1, 15, 'rust_62337.jpg'),
+('Rust', 'Rust', 'static/miner_54560.jpg', 'blablablalblab', 'nananana', 1, 1, 16, 'miner_54560.jpg'),
+('Rust', 'Rust', 'static/miner_28723.jpg', 'blablablalblab', 'nananana', 1, 1, 17, 'miner_28723.jpg'),
+('Phoma', 'Phoma', 'static/healthy_35697.jpg', 'blablablalblab', 'nananana', 1, 1, 18, 'healthy_35697.jpg'),
+('Rust', 'Rust', 'static/healthy_56293.jpg', 'blablablalblab', 'nananana', 1, 1, 19, 'healthy_56293.jpg'),
+('Rust', 'Rust', 'static/miner_28410.jpg', 'blablablalblab', 'nananana', 1, 1, 20, 'miner_28410.jpg'),
+('Rust', 'Rust', 'static/rust_62999.jpg', 'blablablalblab', 'nananana', 1, 1, 21, 'rust_62999.jpg'),
+('Rust', 'Rust', 'static/miner_58579.jpg', 'blablablalblab', 'nananana', 1, 1, 22, 'miner_58579.jpg');
 
 -- --------------------------------------------------------
 
@@ -126,7 +140,7 @@ ALTER TABLE `hasil_panen`
 -- AUTO_INCREMENT for table `penyakit`
 --
 ALTER TABLE `penyakit`
-  MODIFY `id_penyakit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_penyakit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user`
