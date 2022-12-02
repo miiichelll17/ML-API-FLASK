@@ -260,22 +260,26 @@ def predict_image(path):
 
 def dictionary(prediction):
     if prediction == 0:
-        return {"ciri": "Healthy",
+        return {"nama_penyakit" :"Healthy",
+                "ciri": "Healthy",
                 "deskripsi": "blablablalblab",
                 "penanganan": "nananana"
                 }
     elif prediction == 1:
-        return {"ciri": "Miner",
+        return {"nama_penyakit" :"Miner",
+                "ciri": "Miner",
                 "deskripsi": "blablablalblab",
                 "penanganan": "nananana"
                 }
     elif prediction == 2:
-        return {"ciri": "Phoma",
-        "deskripsi": "blablablalblab",
-        "penanganan": "nananana"
+        return {"nama_penyakit" :"Phoma",
+                "ciri": "Phoma",
+                "deskripsi": "blablablalblab",
+                "penanganan": "nananana"
         }
     else:
         return {
+            "nama_penyakit": "Rust",
             "ciri": "Rust",
             "deskripsi": "blablablalblab",
             "penanganan" : "nananana"
@@ -302,8 +306,8 @@ def predict():
         result = dictionary(p)
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO penyakit(ciri, deskripsi, penanganan, latitude, longitude,  image, url) VALUES (%s, %s, %s, %s, %s,%s, %s)",
-                    (result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url))
+        cur.execute("INSERT INTO penyakit(nama_penyakit, ciri, deskripsi, penanganan, latitude, longitude,  image, url) VALUES (%s, %s, %s, %s, %s, %s,%s, %s)",
+                    (result['nama_penyakit'], result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url))
         mysql.connection.commit()
         cur.close()
         return {
@@ -348,8 +352,8 @@ def updatee(id_penyakit):
             result = dictionary(p)
 
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE penyakit SET ciri=%s, deskripsi=%s, penanganan=%s, latitude=%s, longitude=%s, image=%s, url=%s WHERE id_penyakit=%s",
-                        (result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url, id_penyakit))
+            cur.execute("UPDATE penyakit SET nama_penyakit=%s, ciri=%s, deskripsi=%s, penanganan=%s, latitude=%s, longitude=%s, image=%s, url=%s WHERE id_penyakit=%s",
+                        (result['nama_penyakit'], result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url, id_penyakit))
             mysql.connection.commit()
             cur.close()
             return {
