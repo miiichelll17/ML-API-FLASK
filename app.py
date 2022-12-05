@@ -30,12 +30,42 @@ app.config['JSON_SORT_KEYS'] = False
 
 mysql = MySQL(app)
 
+@app.route('/')
+def index() :
+    return render_template("index.html")
 
-@app.route('/register', methods=['POST'])
+@app.route('/home')
+def home():
+    if 'username' in session:
+        return render_template("home.html")
+    else:
+        return redirect(url_for('index')) 
+
+@app.route('/deteksi')
+def deteksi():
+    if 'username' in session:
+        return render_template("deteksi.html")
+    else:
+        return redirect(url_for('index'))
+@app.route('/pencatatan')
+def pencatatan():
+    if 'username' in session:
+        return render_template("pencatatan.html")
+    else:
+        return redirect(url_for('index')) 
+
+@app.route('/profile')
+def profile():
+    if 'username' in session:
+        return render_template("profile.html")
+    else:
+        return redirect(url_for('home'))
+
+@app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == 'POST':
-        # return render_template("register.html")
-
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
@@ -43,39 +73,46 @@ def register():
         hash_password = bcrypt.hashpw(passwordstring, bcrypt.gensalt())
 
         validateUsername = cur.execute(
-            "SELECT username FROM users WHERE username = %s", [username])
+            "SELECT username FROM user WHERE username = %s", [username])
         if validateUsername > 0:
             return jsonify({"message": "Username already exists"})
 
         # hashed_password = Bcrypt.generate_password_hash('qwerty',passwordstring)
 
-        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)",
+        cur.execute("INSERT INTO user(username, password) VALUES(%s, %s)",
                     (username, hash_password))
         mysql.connection.commit()
         cur.close()
-        return 'success'
+        return redirect(url_for('login')) 
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
         curl = mysql.connection.cursor()
-        curl.execute("SELECT * FROM users WHERE username = %s", (username,))
+        curl.execute("SELECT * FROM user WHERE username = %s", (username,))
         user = curl.fetchone()
         curl.close()
 
         if user is not None and len(user) > 0:
             if bcrypt.hashpw(password, user[2].encode('utf-8')) == user[2].encode('utf-8'):
-                return "Success"
+                session['username'] = request.form['username']
+                return redirect(url_for('home')) 
             else:
-                return "Gagal, username dan password tidak cocok"
+                flash("Gagal, Email dan Password Tidak Cocok")
+                return redirect(url_for('login'))
         else:
-            return "Username tidak ditemukan"
-    else:
-        return "Method undefined"
+            flash("Gagal, User Tidak Ditemukan")
+            return redirect(url_for('login'))
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index')) 
 
 @app.route('/pencatatan/insert', methods=['POST'])
 def insert():
@@ -153,16 +190,16 @@ def search():
     #     return render_template('index.html')
 
 
-@app.route('/pencatatan/delete', methods=['POST'])
+@app.route('/pencatatan/delete', methods=['DELETE'])
 def delete():
     # try:
     jeniskopi = request.form['prodsname']
     if jeniskopi == "":
         return "Harap isi kolom penghapusan"
     else:
-        if request.method == 'POST':
+        if request.method == 'DELETE':
             mycursor = mysql.connection.cursor()
-            if request.method == 'POST':
+            if request.method == 'DELETE':
                 mycursor.execute(
                     "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
                 if mycursor.fetchone()[0]:
@@ -181,7 +218,7 @@ def delete():
     #     return render_template('index.html')
 
 
-@app.route('/pencatatan/update', methods=['POST'])
+@app.route('/pencatatan/update', methods=['PUT'])
 def update():
     # try:
     jeniskopi = request.form['addname']
@@ -198,9 +235,9 @@ def update():
     elif timee == "":
         return "Waktu tidak boleh kosong"
     else:
-        if request.method == 'POST':
+        if request.method == 'PUT':
             mycursor = mysql.connection.cursor()
-            if request.method == 'POST':
+            if request.method == 'PUT':
                 mycursor.execute(
                     "SELECT COUNT(1) FROM hasil_panen WHERE jenis_kopi = %s;", [jeniskopi])
                 if mycursor.fetchone()[0]:
@@ -235,6 +272,7 @@ def update():
 
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
 interpreter.allocate_tensors()
+
 # Get input and output tensors.
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
@@ -244,8 +282,6 @@ input_shape = input_details[0]['shape']
 input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
 
 # predicting images
-
-
 def predict_image(path):
     img = load_img(path, target_size=(256, 256))
     x = img_to_array(img)
@@ -257,17 +293,34 @@ def predict_image(path):
 
     output_data = interpreter.get_tensor(output_details[0]['index'])
     prediction = np.argmax(output_data)
-
+    return prediction
 
 def dictionary(prediction):
     if prediction == 0:
-        print("Healthy")
+        return {"nama_penyakit" :"Healthy",
+                "ciri": "Healthy",
+                "deskripsi": "blablablalblab",
+                "penanganan": "nananana"
+                }
     elif prediction == 1:
-        print("Miner")
+        return {"nama_penyakit" :"Miner",
+                "ciri": "Miner",
+                "deskripsi": "blablablalblab",
+                "penanganan": "nananana"
+                }
     elif prediction == 2:
-        print("Phoma")
+        return {"nama_penyakit" :"Phoma",
+                "ciri": "Phoma",
+                "deskripsi": "blablablalblab",
+                "penanganan": "nananana"
+        }
     else:
-        print("Rust")
+        return {
+            "nama_penyakit": "Rust",
+            "ciri": "Rust",
+            "deskripsi": "blablablalblab",
+            "penanganan" : "nananana"
+        }
 
 
 # untuk menambahkan data
@@ -281,8 +334,8 @@ def predict():
 
         splitfile = os.path.splitext(img.filename)
         fileName = splitfile[0] + str(random.randint(1, 1000)) + splitfile[1]
-        img.save("./static/" + fileName)
-        url = os.path.join('static/', fileName)
+        img.save("./static/deteksi/" + fileName)
+        url = os.path.join('static/deteksi/', fileName)
         img_path = url
 
         p = predict_image(img_path)
@@ -290,8 +343,8 @@ def predict():
         result = dictionary(p)
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO penyakits(ciri, latitude, longitude,  image, url) VALUES (%s, %s, %s, %s, %s, %s)",
-                    (result['result'], latitude, longitude, fileName, url))
+        cur.execute("INSERT INTO penyakit(nama_penyakit, ciri, deskripsi, penanganan, latitude, longitude,  image, url) VALUES (%s, %s, %s, %s, %s, %s,%s, %s)",
+                    (result['nama_penyakit'], result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url))
         mysql.connection.commit()
         cur.close()
         return {
@@ -301,14 +354,12 @@ def predict():
         }
 
 # untuk mengupdate data
-
-
 @app.route("/penyakit/<int:id_penyakit>", methods=['PUT'])
 def updatee(id_penyakit):
     if request.method == 'PUT':
         cur = mysql.connection.cursor()
         searchpenyakit = cur.execute(
-            "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+            "SELECT * FROM penyakit WHERE id_penyakit = {}".format(id_penyakit))
         row_headers = [x[0] for x in cur.description]
         if (searchpenyakit > 0):
             penyakit = cur.fetchall()
@@ -338,8 +389,8 @@ def updatee(id_penyakit):
             result = dictionary(p)
 
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE penyakits SET ciri=%s, latitude=%s, longitude=%s, image=%s, url=%s WHERE id_penyakit=%s",
-                        (result['result'], latitude, longitude, fileName, url, id_penyakit))
+            cur.execute("UPDATE penyakit SET nama_penyakit=%s, ciri=%s, deskripsi=%s, penanganan=%s, latitude=%s, longitude=%s, image=%s, url=%s WHERE id_penyakit=%s",
+                        (result['nama_penyakit'], result['ciri'], result['deskripsi'], result['penanganan'], latitude, longitude, fileName, url, id_penyakit))
             mysql.connection.commit()
             cur.close()
             return {
@@ -356,7 +407,7 @@ def updatee(id_penyakit):
 @app.route('/penyakit', methods=['GET'])
 def get_penyakit():
     cur = mysql.connection.cursor()
-    result = cur.execute("SELECT * FROM penyakits AS result")
+    result = cur.execute("SELECT * FROM penyakit AS result")
     row_headers = [x[0] for x in cur.description]
     if result > 0:
         penyakitDetails = cur.fetchall()
@@ -377,7 +428,7 @@ def get_penyakit():
 def get_penyakit_by_id(id_penyakit):
     cur = mysql.connection.cursor()
     result = cur.execute(
-        "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+        "SELECT * FROM penyakit WHERE id_penyakit = {}".format(id_penyakit))
     row_headers = [x[0] for x in cur.description]
     if result > 0:
         penyakitDetails = cur.fetchall()
@@ -398,7 +449,7 @@ def get_penyakit_by_id(id_penyakit):
 def deletee(id_penyakit):
     cur = mysql.connection.cursor()
     searchpenyakit = cur.execute(
-        "SELECT * FROM penyakits WHERE id_penyakit = {}".format(id_penyakit))
+        "SELECT * FROM penyakit WHERE id_penyakit = {}".format(id_penyakit))
     row_headers = [x[0] for x in cur.description]
     if (searchpenyakit > 0):
         penyakit = cur.fetchall()
@@ -413,7 +464,7 @@ def deletee(id_penyakit):
 
     os.remove("./static/" + json_data[0]['image'])
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM penyakits WHERE id_penyakit={}".format(id_penyakit))
+    cur.execute("DELETE FROM penyakit WHERE id_penyakit={}".format(id_penyakit))
     mysql.connection.commit()
     cur.close()
 

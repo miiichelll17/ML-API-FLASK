@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eunoia I | Home</title>
+
+  <!-- favicon -->
+  <link rel="icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+
+  <!-- Css stylesheet -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/7e092f1d1b.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+</head>
+
+<body>
+  <!-- navbar section -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Eunoia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Account
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/register">Register</a></li>
+              <li><a class="dropdown-item" href="/login">Login</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- content section -->
+  <!-- about -->
+  <section id="content">
+
+    <div class="container-fluid">
+
+      <div class="row">
+
+        <div class="about_img col-lg-6">
+          <img id="about_img" src="{{ url_for('static', filename='images/daun kopi.png') }}" alt="gambar daun kopi">
+        </div>
+
+        <div class="about_tittle col-lg-6">
+          <h2>Eunoia Deteksi Daun Kopi</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tincidunt ullamcorper lectus, in vehicula massa rhoncus sed. Curabitur vitae mollis est. Pellentesque ex magna, vulputate vel euismod a, finibus a velit. Donec eget eros
+            egestas, scelerisque nisi consequat, ultrices augue. Suspendisse quis nunc metus. Ut auctor in risus et semper. In cursus tincidunt eros, id pellentesque erat blandit quis. Duis nec commodo ipsum, a convallis urna. Nam condimentum ut
+            turpis sed ultrices. Nulla dignissim libero nec augue sollicitudin convallis a vitae mi. Cras vehicula fringilla purus, at ornare nibh iaculis at. Nunc a volutpat tellus, non semper tortor. Praesent aliquet sollicitudin dolor, sit amet
+            fermentum lorem. Etiam in turpis non massa fringilla tincidunt. Vivamus luctus felis quis vulputate eleifend. Phasellus fringilla quam nisl, eget aliquet elit lacinia vel.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+  </section>
+
+  <hr>
+
+  <!-- feature section -->
+  <section id="features">
+    <div class="container-fluid">
+
+      <div class="row">
+        <h1>Fitur Website</h1>
+
+        <div class="col-lg-4">
+          <i class="icon fa-solid fa-circle-check"></i>
+          <h3 class="h3-features">Mudah Digunakan.</h3>
+          <p>Seluruh fitur yang terdapat pada website kami mudah untuk digunakan.</p>
+        </div>
+
+        <div class="col-lg-4">
+          <i class="icon fa-sharp fa-solid fa-camera"></i>
+          <h3 class="h3-features">Deteksi.</h3>
+          <p>Fitur utama pada website ini yaitu deteksi penyakit yang terdapat pada daun tanaman kopi.</p>
+        </div>
+
+        <div class="col-lg-4">
+          <i class="icon fa-solid fa-book"></i>
+          <h3 class="h3-features">Pencatatan.</h3>
+          <p>Terdapat fitur pencatatan riwayat penyakit tumbuhan guna memudahkan pendataan.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- contact section -->
+
+  <section id="contact">
+    <div class="container-fluid py-5 bg-dark text-white">
+      <div class="container">
+        <h2 class="text-center mb-4">Hubungi Kami</h2>
+
+        <div class="offset-lg-2 col-lg-8">
+
+          <form>
+            <div class="mb-3">
+              <div class="row">
+
+                <div class="col-lg-6">
+                  <label for="namadepan" class="form-label">Nama Depan</label>
+                  <input type="text" name="namadepan" class="form-control" autocomplete="off">
+                </div>
+
+                <div class="col-lg-6">
+                  <label for="namabelakang" class="form-label">Nama Belakang</label>
+                  <input type="text" name="namabelakang" class="form-control" autocomplete="off">
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-control" autocomplete="off">
+            </div>
+
+            <div class="mb-3">
+              <label for="deskripsi" class="form-label">Deskripsi</label>
+              <textarea id="deskripsi" class="form-control" rows="10" cols="30"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <button type="button" name="button" class="btn btn-light">Kirim</button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+  <!-- footer section -->
+  <section class="footer">
+    <ul class="social-icon">
+      <li class="foot-icon"><a href="/" class="fa fa-facebook"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-twitter"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-instagram"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-github"></a></li>
+    </ul>
+    <p>Copyright ©Eunoia_1 Team | Design by: Eunoia 1 Team</a></p>
+  </section>
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  -->
+</body>
+
+</html>

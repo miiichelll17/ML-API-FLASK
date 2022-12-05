@@ -1,0 +1,53 @@
+
+body {
+  text-align: justify;
+}
+
+li {
+  list-style: none;
+  margin: 20px 0 20px 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container-fluid {
+  padding: 1% 3%;
+}
+
+/* navbar section */
+.navbar {
+  background-color: #28DF99;
+  height: 3.5rem;
+}
+
+.nav-item :hover {
+  color: white;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  margin-left: -300px;
+  transition: 0.4s;
+}
+
+.active-main-content {
+  margin-left: 250px;
+}
+
+.active-sidebar {
+  margin-left: 0;
+}
+
+#main-content {
+  transition: 0.4s;
+}
