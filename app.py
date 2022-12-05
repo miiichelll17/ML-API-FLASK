@@ -34,8 +34,7 @@ mysql = MySQL(app)
 @app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        # return render_template("register.html")
-
+       
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
@@ -53,7 +52,9 @@ def register():
                     (username, hash_password))
         mysql.connection.commit()
         cur.close()
-        return 'success'
+        return jsonify({
+            "pesan": "Berhasil Register",
+        })
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -235,6 +236,7 @@ def update():
 
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
 interpreter.allocate_tensors()
+
 # Get input and output tensors.
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
@@ -244,7 +246,6 @@ input_shape = input_details[0]['shape']
 input_data = np.array(np.random.random_sample(input_shape), dtype=np.float32)
 
 # predicting images
-
 def predict_image(path):
     img = load_img(path, target_size=(256, 256))
     x = img_to_array(img)
