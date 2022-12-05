@@ -8,11 +8,11 @@
   <title>Eunoia I | Home</title>
 
   <!-- favicon -->
-  <link rel="icon" href="images/favicon.ico">
+  <link rel="icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
 
   <!-- Css stylesheet -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/7e092f1d1b.js" crossorigin="anonymous"></script>
@@ -24,22 +24,22 @@
   <!-- navbar section -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="index.html">Eunoia</a>
+      <a class="navbar-brand" href="/">Eunoia</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="/" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Account
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="templates/register.html">Register</a></li>
-              <li><a class="dropdown-item" href="login.html">Login</a></li>
+              <li><a class="dropdown-item" href="/register">Register</a></li>
+              <li><a class="dropdown-item" href="/login">Login</a></li>
             </ul>
           </li>
         </ul>
@@ -56,7 +56,7 @@
       <div class="row">
 
         <div class="about_img col-lg-6">
-          <img id="about_img" src="images/daun kopi.png" alt="gambar daun kopi">
+          <img id="about_img" src="{{ url_for('static', filename='images/daun kopi.png') }}" alt="gambar daun kopi">
         </div>
 
         <div class="about_tittle col-lg-6">
@@ -164,10 +164,10 @@
   <!-- footer section -->
   <section class="footer">
     <ul class="social-icon">
-      <li class="foot-icon"><a href="#" class="fa fa-facebook"></a></li>
-      <li class="foot-icon"><a href="#" class="fa fa-twitter"></a></li>
-      <li class="foot-icon"><a href="#" class="fa fa-instagram"></a></li>
-      <li class="foot-icon"><a href="#" class="fa fa-github"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-facebook"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-twitter"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-instagram"></a></li>
+      <li class="foot-icon"><a href="/" class="fa fa-github"></a></li>
     </ul>
     <p>Copyright ©Eunoia_1 Team | Design by: Eunoia 1 Team</a></p>
   </section>

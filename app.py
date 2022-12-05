@@ -30,11 +30,42 @@ app.config['JSON_SORT_KEYS'] = False
 
 mysql = MySQL(app)
 
+@app.route('/')
+def index() :
+    return render_template("index.html")
 
-@app.route('/register', methods=['POST'])
+@app.route('/home')
+def home():
+    if 'username' in session:
+        return render_template("home.html")
+    else:
+        return redirect(url_for('index')) 
+
+@app.route('/deteksi')
+def deteksi():
+    if 'username' in session:
+        return render_template("deteksi.html")
+    else:
+        return redirect(url_for('index'))
+@app.route('/pencatatan')
+def pencatatan():
+    if 'username' in session:
+        return render_template("pencatatan.html")
+    else:
+        return redirect(url_for('index')) 
+
+@app.route('/profile')
+def profile():
+    if 'username' in session:
+        return render_template("profile.html")
+    else:
+        return redirect(url_for('home'))
+
+@app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == 'POST':
-       
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
         cur = mysql.connection.cursor()
         userDetails = request.form
         username = userDetails['username']
@@ -52,14 +83,14 @@ def register():
                     (username, hash_password))
         mysql.connection.commit()
         cur.close()
-        return jsonify({
-            "pesan": "Berhasil Register",
-        })
+        return redirect(url_for('login')) 
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
         curl = mysql.connection.cursor()
@@ -69,14 +100,19 @@ def login():
 
         if user is not None and len(user) > 0:
             if bcrypt.hashpw(password, user[2].encode('utf-8')) == user[2].encode('utf-8'):
-                return "Success"
+                session['username'] = request.form['username']
+                return redirect(url_for('home')) 
             else:
-                return "Gagal, username dan password tidak cocok"
+                flash("Gagal, Email dan Password Tidak Cocok")
+                return redirect(url_for('login'))
         else:
-            return "Username tidak ditemukan"
-    else:
-        return "Method undefined"
+            flash("Gagal, User Tidak Ditemukan")
+            return redirect(url_for('login'))
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index')) 
 
 @app.route('/pencatatan/insert', methods=['POST'])
 def insert():
@@ -298,8 +334,8 @@ def predict():
 
         splitfile = os.path.splitext(img.filename)
         fileName = splitfile[0] + str(random.randint(1, 1000)) + splitfile[1]
-        img.save("./static/" + fileName)
-        url = os.path.join('static/', fileName)
+        img.save("./static/deteksi/" + fileName)
+        url = os.path.join('static/deteksi/', fileName)
         img_path = url
 
         p = predict_image(img_path)
